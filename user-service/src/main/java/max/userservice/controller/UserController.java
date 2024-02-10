@@ -21,9 +21,9 @@ public class UserController {
     @Autowired
     UserUserDTOMapper userMapper;
     @PostMapping("/register")
-    public String registerUser(@RequestBody UserDTO userDTO) {
+    public UserDTO registerUser(@RequestBody UserDTO userDTO) {
         User user = userMapper.userDtoToUser(userDTO);
-        return userService.registerUser(user);
+        return userMapper.userToDto(userService.registerUser(user));
     }
 
 //    @PostMapping("/login")

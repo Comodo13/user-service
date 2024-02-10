@@ -16,9 +16,9 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public String registerUser(User user) {
+    public User registerUser(User user) {
         // Your implementation for user registration
-        return "User registered successfully";
+        return userRepository.save(user);
     }
 
     public String loginUser(String username, String password) {

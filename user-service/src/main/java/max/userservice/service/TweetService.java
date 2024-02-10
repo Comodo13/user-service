@@ -1,5 +1,6 @@
 package max.userservice.service;
 
+import max.userservice.model.Tweet;
 import max.userservice.repo.TweetRepository;
 import max.userservice.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,5 +15,10 @@ public class TweetService {
     @Autowired
     public TweetService(TweetRepository tweetRepository) {
         this.tweetRepository = tweetRepository;
+    }
+
+
+    public Tweet createTweet(Tweet tweet) {
+        return tweetRepository.save(tweet);
     }
 }
