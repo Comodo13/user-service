@@ -1,6 +1,7 @@
 package max.userservice.service;
 
 
+import max.userservice.model.User;
 import max.userservice.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public String registerUser(String username, String password, String email) {
+    public String registerUser(User user) {
         // Your implementation for user registration
         return "User registered successfully";
     }
