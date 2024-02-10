@@ -18,12 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @Autowired
-    UserService userService;
+        UserService userService;
 
     @Autowired
     UserUserDTOMapper userMapper;
     @PostMapping("/register")
     public UserDTO registerUser(@RequestBody UserDTO userDTO) {
+        System.out.println(userDTO);
         User user = userMapper.userDtoToUser(userDTO);
         return userMapper.userToDto(userService.registerUser(user));
     }

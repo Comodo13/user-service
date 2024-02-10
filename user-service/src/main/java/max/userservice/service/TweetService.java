@@ -6,6 +6,7 @@ import max.userservice.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -27,4 +28,13 @@ public class TweetService {
     public List<Tweet> getAllTweets() {
         return tweetRepository.findAll();
     }
+
+    public Tweet getTweet(Long tweetId) {
+        return tweetRepository.findById(tweetId).orElse(null);
+    }
+
+    public void deleteTweet(Long tweetId) {
+        tweetRepository.deleteById(tweetId);
+    }
+
 }

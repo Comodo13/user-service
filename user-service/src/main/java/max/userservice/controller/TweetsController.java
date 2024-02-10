@@ -36,6 +36,12 @@ public class TweetsController {
         return tweetService.getAllTweets();
     }
 
+    @DeleteMapping("/tweets/{tweetId}")
+    public void deleteTweet(@PathVariable Long tweetId) {
+        tweetService.deleteTweet(tweetId);
+    }
+
+
 //    @GetMapping("/tweets/{tweetId}")
 //    public String getTweet(@PathVariable Long tweetId) {
 //        return twitterService.getTweet(tweetId);

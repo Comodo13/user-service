@@ -21,6 +21,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User findUserByUsername(String username) {
+        // Your implementation for finding user by username
+        return userRepository.findByUsername(username);
+    }
+
     public String loginUser(String username, String password) {
         // Your implementation for user login
         return "User logged in successfully";
