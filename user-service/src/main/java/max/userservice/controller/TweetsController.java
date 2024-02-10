@@ -23,6 +23,11 @@ public class TweetsController {
         return tweetMapper.tweetToTweetDTO(tweetService.createTweet(tweetMapper.tweetDTOtoTweet(tweetDTO)));
     }
 
+    @GetMapping("/tweets")
+    public Iterable<Tweet> getAllTweets(){
+        return tweetService.getAllTweets();
+    }
+
 //    @GetMapping("/tweets/{tweetId}")
 //    public String getTweet(@PathVariable Long tweetId) {
 //        return twitterService.getTweet(tweetId);
