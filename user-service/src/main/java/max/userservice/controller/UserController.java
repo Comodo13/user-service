@@ -1,6 +1,7 @@
 package max.userservice.controller;
 
 
+import lombok.AllArgsConstructor;
 import max.userservice.dto.UserDTO;
 import max.userservice.dto.UserUserDTOMapper;
 import max.userservice.model.User;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
+@AllArgsConstructor
 public class UserController {
 
     @Autowired

@@ -6,11 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
+@Entity
 public class User {
 
     @Id
@@ -38,6 +40,13 @@ public class User {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @OneToMany
+    private List<Tweet> tweets;
+
+
+
+
 
     // Getters and setters
 }

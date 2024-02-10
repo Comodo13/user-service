@@ -12,15 +12,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "tweets")
+@Entity
 public class Tweet {
     @Id
     @GeneratedValue
     private Long id;
 
-    @Column(name = "user_id")
-    @OneToOne(mappedBy = "id", fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id")
-    private Long userId;
+    @ManyToOne
+    private User user;
 
     @Column(columnDefinition = "TEXT")
     private String content;
