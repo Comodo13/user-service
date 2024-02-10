@@ -36,9 +36,11 @@ public class User {
     private String profileImage;
 
     @Column(name = "created_at")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private LocalDateTime updatedAt;
 
     @OneToMany
