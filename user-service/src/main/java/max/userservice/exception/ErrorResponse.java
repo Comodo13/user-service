@@ -1,5 +1,7 @@
 package max.userservice.exception;
 
+import java.util.Map;
+
 public class ErrorResponse {
     private int statusCode;
     private String message;
@@ -24,4 +26,6 @@ public class ErrorResponse {
     public void setMessage(String message) {
         this.message = message;
     }
+
+
 }
