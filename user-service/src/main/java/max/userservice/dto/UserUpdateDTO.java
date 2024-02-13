@@ -2,14 +2,26 @@ package max.userservice.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-public class UserDTO {
+public class UserUpdateDTO {
+    @NotNull(message = "Id is mandatory for updating")
+    private Long userId;
     private String username;
     private String password;
+    @Email
     private String email;
     private String fullName;
     private String bio;
     private String profileImage;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public String getUsername() {
         return username;

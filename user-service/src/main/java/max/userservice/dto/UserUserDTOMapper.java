@@ -5,6 +5,12 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface UserUserDTOMapper {
-    User userDtoToUser(UserDTO source);
-    UserDTO userToDto(User destination);
+    User userCreateDTOToUser(UserCreateDTO source);
+
+    User userUpdateDTOToUser(UserCreateDTO source);
+    UserCreateDTO userToUserCreateDTO(User destination);
+
+    UserDTO userToUserDTO(User user);
+
+
 }
