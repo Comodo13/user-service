@@ -43,13 +43,19 @@ public class UserController {
 
     @PutMapping("/go")
     public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserUpdateDTO userDTO) {
-
-
         User updatedUser = userService.updateUser(userDTO);
         UserDTO updatedUserDTO = userMapper.userToUserDTO(updatedUser);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(updatedUserDTO);
+    }
+
+    @DeleteMapping("/")
+    public ResponseEntity<Boolean> deleteUser(@PathVariable Long userId) {
+        Boolean userWasDeleted = userService.deleteUser(userId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(userWasDeleted);
     }
 
 //    @PostMapping("/login")

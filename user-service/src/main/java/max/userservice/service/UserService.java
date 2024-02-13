@@ -2,11 +2,14 @@ package max.userservice.service;
 
 
 import max.userservice.dto.UserUpdateDTO;
+import max.userservice.events.UserCreatedEvent;
 import max.userservice.exception.EntityNotFoundException;
 import max.userservice.exception.ValidationException;
 import max.userservice.model.User;
 import max.userservice.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,22 +17,25 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+
+    private final ApplicationEventPublisher eventPublisher;
+
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, ApplicationEventPublisher eventPublisher) {
         this.userRepository = userRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     public User registerUser(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new ValidationException("Email already in use");
         }
-
-        // Check if username is already in use
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new ValidationException("Username already in use");
         }
+
         User persistedUser = userRepository.save(user);
-        System.out.println(persistedUser);
+        eventPublisher.publishEvent(new UserCreatedEvent(this, persistedUser));
         return persistedUser;
     }
 
@@ -37,7 +43,8 @@ public class UserService {
         User existingUser = userRepository.findById(userUpdateDTO.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException(userUpdateDTO.getUserId()));
 
-        // Update only the non-null fields from the update DTO
+
+
         if (userUpdateDTO.getUsername() != null) {
             existingUser.setUsername(userUpdateDTO.getUsername());
         }
@@ -63,7 +70,6 @@ public class UserService {
     }
 
     public User findUserByUsername(String username) {
-        // Your implementation for finding user by username
         return userRepository.findByUsername(username);
     }
 
@@ -72,4 +78,18 @@ public class UserService {
         return "User logged in successfully";
     }
 
+
+    public boolean deleteUser(Long userId) {
+        try {
+            userRepository.deleteById(userId);
+            return true; // Deletion successful
+        } catch (EmptyResultDataAccessException ex) {
+            // If the user with the given ID does not exist
+            return false; // Deletion failed
+        } catch (Exception ex) {
+            // Other exceptions such as database errors
+            ex.printStackTrace(); // Log the exception
+            return false; // Deletion failed
+        }
+    }
 }
