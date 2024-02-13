@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
-
+@RequestMapping("/tweet/")
 public class TweetsController {
 
 
@@ -26,7 +25,7 @@ public class TweetsController {
         this.tweetService = tweetService;
     }
 
-    @PostMapping("/tweets")
+    @PostMapping("")
     public TweetDTO createTweet(@RequestBody TweetDTO tweetDTO) {
         return tweetMapper.tweetToTweetDTO(tweetService.createTweet(tweetMapper.tweetDTOtoTweet(tweetDTO)));
     }
@@ -34,6 +33,11 @@ public class TweetsController {
     @GetMapping("/tweets")
     public Iterable<Tweet> getAllTweets() {
         return tweetService.getAllTweets();
+    }
+
+    @GetMapping("{tweetId}")
+    public Tweet getAllTweets(@PathVariable Long tweetId) {
+        return tweetService.getTweet(tweetId);
     }
 
     @DeleteMapping("/tweets/{tweetId}")

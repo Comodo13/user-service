@@ -2,7 +2,6 @@ package max.userservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 
@@ -28,5 +27,5 @@ public class Tweet {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Getters and setters
+
 }

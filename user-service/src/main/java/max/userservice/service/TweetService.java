@@ -1,5 +1,6 @@
 package max.userservice.service;
 
+import max.userservice.exception.EntityNotFoundException;
 import max.userservice.model.Tweet;
 import max.userservice.repo.TweetRepository;
 import max.userservice.repo.UserRepository;
@@ -30,7 +31,8 @@ public class TweetService {
     }
 
     public Tweet getTweet(Long tweetId) {
-        return tweetRepository.findById(tweetId).orElse(null);
+        return tweetRepository.findById(tweetId)
+                .orElseThrow(() -> new EntityNotFoundException(tweetId));
     }
 
     public void deleteTweet(Long tweetId) {
