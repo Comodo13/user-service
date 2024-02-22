@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 public interface UserUserDTOMapper {
     User userCreateDTOToUser(UserCreateDTO source);
 
-    User userUpdateDTOToUser(UserCreateDTO source);
+    User userUpdateDTOToUser(UserUpdateDTO source);
     UserCreateDTO userToUserCreateDTO(User destination);
 
     UserDTO userToUserDTO(User user);

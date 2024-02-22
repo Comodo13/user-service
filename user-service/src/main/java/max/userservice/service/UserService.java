@@ -1,7 +1,10 @@
 package max.userservice.service;
 
 
+import max.userservice.dto.UserCreateDTO;
+import max.userservice.dto.UserDTO;
 import max.userservice.dto.UserUpdateDTO;
+import max.userservice.dto.UserUserDTOMapper;
 import max.userservice.events.UserCreatedEvent;
 import max.userservice.exception.EntityNotFoundException;
 import max.userservice.exception.ValidationException;
@@ -20,18 +23,22 @@ public class UserService {
 
     private final ApplicationEventPublisher eventPublisher;
 
+    private final UserUserDTOMapper userMapper;
+
     @Autowired
-    public UserService(UserRepository userRepository, ApplicationEventPublisher eventPublisher) {
+    public UserService(UserRepository userRepository, ApplicationEventPublisher eventPublisher, UserUserDTOMapper userMapper) {
         this.userRepository = userRepository;
         this.eventPublisher = eventPublisher;
+        this.userMapper = userMapper;
     }
 
 
-    public User registerUser(User user) {
-        validateUser(user);
-        User persistedUser = userRepository.save(user);
+
+    public UserDTO registerUser(UserCreateDTO userCreateDTO) {
+        validateUser(userMapper.userCreateDTOToUser(userCreateDTO));
+        User persistedUser = userRepository.save(userMapper.userCreateDTOToUser(userCreateDTO));
         eventPublisher.publishEvent(new UserCreatedEvent(this, persistedUser));
-        return persistedUser;
+        return userMapper.userToUserDTO(persistedUser);
     }
 
     private void validateUser(User user) {
@@ -44,22 +51,30 @@ public class UserService {
     }
 
 
-    public User updateUser(UserUpdateDTO userUpdateDTO) {
+    public UserDTO updateUser(UserUpdateDTO userUpdateDTO) {
         User existingUser = userRepository.findById(userUpdateDTO.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException(userUpdateDTO.getUserId()));
-
+        validateUpdate(userUpdateDTO, existingUser);
+        User updatedUser = userRepository.save(existingUser);
+        return userMapper.userToUserDTO(updatedUser);
+    }
+    private void validateUpdate(UserUpdateDTO userUpdateDTO, User existingUser) {
+        if (userUpdateDTO.getUsername() != null || userUpdateDTO.getEmail() != null) {
+            validateUserUpdate(userUpdateDTO, existingUser);
+        }
 
         if (userUpdateDTO.getUsername() != null) {
             existingUser.setUsername(userUpdateDTO.getUsername());
         }
+
         if (userUpdateDTO.getEmail() != null) {
-            // Check if the updated email is already in use by another user
-            if (!existingUser.getEmail().equals(userUpdateDTO.getEmail())
-                    && userRepository.existsByEmail(userUpdateDTO.getEmail())) {
-                throw new ValidationException("Email already in use");
-            }
             existingUser.setEmail(userUpdateDTO.getEmail());
         }
+
+        if (userUpdateDTO.getFullName() != null) {
+            existingUser.setFullName(userUpdateDTO.getFullName());
+        }
+
         if (userUpdateDTO.getFullName() != null) {
             existingUser.setFullName(userUpdateDTO.getFullName());
         }
@@ -69,8 +84,19 @@ public class UserService {
         if (userUpdateDTO.getProfileImage() != null) {
             existingUser.setProfileImage(userUpdateDTO.getProfileImage());
         }
-        User updatedUser = userRepository.save(existingUser);
-        return updatedUser;
+    }
+
+    private void validateUserUpdate(UserUpdateDTO userUpdateDTO, User existingUser) {
+        User anotherUserWithSameEmail = userRepository.findByEmail(userUpdateDTO.getEmail());
+        if (anotherUserWithSameEmail != null
+                && !anotherUserWithSameEmail.getId().equals(userUpdateDTO.getUserId())) {
+            throw new ValidationException("Email already in use");
+        }
+        User anotherUserWithSameUsername = userRepository.findByUsername(userUpdateDTO.getUsername());
+        if (anotherUserWithSameUsername != null
+                && !anotherUserWithSameUsername.getId().equals(userUpdateDTO.getUserId())) {
+            throw new ValidationException("Username already in use");
+        }
     }
 
     public User findUserByUsername(String username) {

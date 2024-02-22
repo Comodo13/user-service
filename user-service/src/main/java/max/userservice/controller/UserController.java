@@ -20,22 +20,16 @@ public class UserController {
 
     UserService userService;
 
-    UserUserDTOMapper userMapper;
 
     @Autowired
-    public UserController(UserService userService, UserUserDTOMapper userMapper) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.userMapper = userMapper;
     }
 
 
     @PostMapping("/go")
-    public ResponseEntity<UserCreateDTO> registerUser(@Valid @RequestBody UserCreateDTO userDTO) {
-        System.out.println(userDTO);
-        User user = userMapper.userCreateDTOToUser(userDTO);
-        System.out.println(user);
-        User registeredUser = userService.registerUser(user);
-        UserCreateDTO registeredUserDTO = userMapper.userToUserCreateDTO(registeredUser);
+    public ResponseEntity<UserDTO> registerUser(@Valid @RequestBody UserCreateDTO userCreateDTO) {
+        UserDTO registeredUserDTO = userService.registerUser(userCreateDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(registeredUserDTO);
@@ -43,8 +37,7 @@ public class UserController {
 
     @PutMapping("/go")
     public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserUpdateDTO userDTO) {
-        User updatedUser = userService.updateUser(userDTO);
-        UserDTO updatedUserDTO = userMapper.userToUserDTO(updatedUser);
+        UserDTO updatedUserDTO = userService.updateUser(userDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(updatedUserDTO);
