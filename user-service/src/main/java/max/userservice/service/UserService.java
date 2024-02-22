@@ -26,23 +26,27 @@ public class UserService {
         this.eventPublisher = eventPublisher;
     }
 
+
     public User registerUser(User user) {
+        validateUser(user);
+        User persistedUser = userRepository.save(user);
+        eventPublisher.publishEvent(new UserCreatedEvent(this, persistedUser));
+        return persistedUser;
+    }
+
+    private void validateUser(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new ValidationException("Email already in use");
         }
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new ValidationException("Username already in use");
         }
-
-        User persistedUser = userRepository.save(user);
-        eventPublisher.publishEvent(new UserCreatedEvent(this, persistedUser));
-        return persistedUser;
     }
+
 
     public User updateUser(UserUpdateDTO userUpdateDTO) {
         User existingUser = userRepository.findById(userUpdateDTO.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException(userUpdateDTO.getUserId()));
-
 
 
         if (userUpdateDTO.getUsername() != null) {
